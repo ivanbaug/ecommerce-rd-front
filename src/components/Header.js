@@ -13,7 +13,7 @@ const Header = () => {
 
   const logoutHandler = () => {
     dispatch(logout())
-    console.log('logout')
+    // console.log('logout')
   }
 
   return (

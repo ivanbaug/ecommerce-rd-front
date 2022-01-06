@@ -16,7 +16,7 @@ const LoginScreen = () => {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const redirect = location.search ? location.search.split('=')[1] : ''
+  const redirect = location.search ? location.search.split('=')[1] : '/'
 
   const userLogin = useSelector(state => state.userLogin)
 
@@ -31,7 +31,7 @@ const LoginScreen = () => {
   const submitHandler = (e) => {
     e.preventDefault()
     dispatch(login(email, password))
-    console.log('submitted')
+    // console.log('submitted')
   }
 
   return (
@@ -69,7 +69,7 @@ const LoginScreen = () => {
       <Row className='py-3'>
         <Col>
           New Customer?
-          <Link to={redirect ? `/register?redirect=${redirect}` : '/register'}>
+          <Link to={(redirect !== '/' && redirect !== '') ? `/register?redirect=${redirect}` : '/register'}>
             Register here!
           </Link>
         </Col>
