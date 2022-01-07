@@ -3,11 +3,21 @@ import { Button, Row, Col, ListGroup, Image, Card } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { saveShippingAddress } from '../actions/cartActions'
+import { createOrder } from '../actions/orderActions'
 import CheckoutSteps from '../components/CheckoutSteps'
 
 import Message from '../components/Message'
+import { ORDER_CREATE_RESET } from '../constants/orderConstants'
+
 
 const PlaceOrderScreen = () => {
+  const orderCreate = useSelector(state => state.orderCreate)
+  const { order, error, success } = orderCreate
+
+
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
   const cart = useSelector(state => state.cart)
 
   const taxFactor = 0.082
@@ -17,9 +27,29 @@ const PlaceOrderScreen = () => {
   cart.taxPrice = Number(cart.itemsPrice * taxFactor).toFixed(2)
 
   cart.totalPrice = (Number(cart.itemsPrice) + Number(cart.shippingPrice) + Number(cart.taxPrice)).toFixed(2)
+  if (!cart.paymentMethod) {
+    navigate('/payment')
+  }
+
+
+  useEffect(() => {
+    if (success) {
+      navigate(`/order/${order._id}`)
+      dispatch({ type: ORDER_CREATE_RESET })
+    }
+  }, [success, navigate, order])
 
   const placeOrder = () => {
-    console.log('placeorder')
+    dispatch(createOrder({
+      orderItems: cart.cartItems,
+      shippingAddress: cart.shippingAddress,
+      paymentMethod: cart.paymentMethod,
+      itemsPrice: cart.itemsPrice,
+      shippingPrice: cart.shippingPrice,
+      taxPrice: cart.taxPrice,
+      totalPrice: cart.totalPrice,
+    }))
+    // console.log('placeorder')
   }
   return (
     <div>
@@ -107,6 +137,13 @@ const PlaceOrderScreen = () => {
                   <Col>Total:</Col>
                   <Col>${cart.totalPrice}</Col>
                 </Row>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                {
+                  error && <Message variant='danger' >
+                    {error}
+                  </Message>
+                }
               </ListGroup.Item>
               <ListGroup.Item>
                 <div className="d-grid gap-2">
