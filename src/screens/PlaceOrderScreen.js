@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { Button, Row, Col, ListGroup, Image, Card } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
-import { saveShippingAddress } from '../actions/cartActions'
+
 import { createOrder } from '../actions/orderActions'
 import CheckoutSteps from '../components/CheckoutSteps'
 
@@ -37,7 +37,7 @@ const PlaceOrderScreen = () => {
       navigate(`/order/${order._id}`)
       dispatch({ type: ORDER_CREATE_RESET })
     }
-  }, [success, navigate, order])
+  }, [success, navigate, order, dispatch])
 
   const placeOrder = () => {
     dispatch(createOrder({
@@ -149,7 +149,7 @@ const PlaceOrderScreen = () => {
                 <div className="d-grid gap-2">
                   <Button
                     type='button'
-                    disabled={cart.cartItems === 0}
+                    disabled={cart.cartItems <= 0}
                     onClick={placeOrder}
                   >Place Order</Button>
                 </div>

@@ -103,7 +103,7 @@ const ProductScreen = () => {
                     <div className="d-grid gap-2">
                       <Button
                         type="button"
-                        disabled={product.countInStock === 0}
+                        disabled={product.countInStock <= 0}
                         onClick={addToCartHandler} >
                         {product.countInStock >= 1 ? 'Add to cart' : 'Out of Stock'}
                       </Button>
